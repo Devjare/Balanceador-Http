@@ -75,6 +75,7 @@ if __name__ == "__main__":
             response_header = response_header + str(status_code) + f" {status_msg}\n\n"
             print("server response: ",response_header)
             clientsocket.send(bytes(response_header, "utf-8"))
+            clientsocket.close()
 
         else:
             file_name = file_name[0:len(file_name)-1]
@@ -85,7 +86,20 @@ if __name__ == "__main__":
                     file_list = [f for f in listdir(file_dir) if isfile(join(file_dir, f))]
                     print(f"Files on dir '{file_dir}: ", file_list)
                     files = pickle.dumps(file_list)
+
+                    status_msg = status[str(status_code)]
+                    # u_response_header, u_ for unique, using response_header, overrited the value
+                    # for all next requests.
+                    u_response_header = response_header + str(status_code) + f" {status_msg}"
+                    print("server response: ",u_response_header)
+                    b_response_header = bytes(u_response_header, "utf-8")
+                    print("response header on bytes: ", b_response_header)
+                    clientsocket.send(b_response_header)
+                    # print("Response message full: ", msg)
+
                     clientsocket.send(files)
+                    # clientsocket.send(msg)
+                    clientsocket.close()
                 else:
                     print(f"{file_dir} doesn't exists.")
             else:

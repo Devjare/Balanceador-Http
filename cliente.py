@@ -35,6 +35,7 @@ def select_server(filename=None,method=RANDOM, rr_current=None):
         return rnd.choice(servers_ports) 
 
 if __name__ == "__main__":
+    MAX_ALLOWED_SIZE = 1000 * 1000 * 100 # 100MB
     port = int(sys.argv[1])
 
     method = sys.argv[2]
@@ -86,5 +87,12 @@ if __name__ == "__main__":
         header = bytes(header, "utf-8") # encode header
         print("Send header: ", header)
         s.send(header)
+
+        response = s.recv(MAX_ALLOWED_SIZE) #
+        print("Full response: ", response)
+        response_body = pickle.loads(s.recv(MAX_ALLOWED_SIZE)) #
+        print("Files: ") 
+        for i in range(len(response_body)):
+            print(f"{response_body[i]}")
 
     s.close()
