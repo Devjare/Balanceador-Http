@@ -56,6 +56,9 @@ if __name__ == "__main__":
     header = f"{method} {destination}"
     
     if(method == "PUT"):
+        # EJEMPLO PUT:
+        # > $ python cliente.py 9099 PUT dirx/file2 RRCG1/FILE_220301230356071056
+
         print("PUT REQUEST")
         try:
             file_to_upload = sys.argv[4]
@@ -84,15 +87,45 @@ if __name__ == "__main__":
 
     else:
         print("GET REQUEST")
+        file_name = header.split(" ")[1].split("/")[1]
+        print("Filename: ", file_name)
         header = bytes(header, "utf-8") # encode header
         print("Send header: ", header)
         s.send(header)
 
         response = s.recv(MAX_ALLOWED_SIZE) #
         print("Full response: ", response)
-        response_body = pickle.loads(s.recv(MAX_ALLOWED_SIZE)) #
-        print("Files: ") 
-        for i in range(len(response_body)):
-            print(f"{response_body[i]}")
+        if('Content-length' in str(response)):
+            print("Gotten a file!, downloading...")
+
+            header = str(response).split("\\n\\n")[0]
+            HEADERSIZE = len(bytes(header, 'utf-8')) # extra byte.
+            print("HEADER RAW: ", header)
+            print("HEADER RAW LEN: ", HEADERSIZE)
+
+            file_size = header.split(":", 1)[1].split("\\n")[0].strip()
+            print("File size: ", file_size)
+            
+            content = response[HEADERSIZE:]
+            print("File content ====================================")
+            print("Fullmsg len: ", len(response))
+            print(len(content))
+
+            ## Verify if dir doesn't exists already.
+            # if not os.path.exists("RRDG1"):
+            #     npath = os.path.join(os.getcwd(), "RRDG1")
+            #     os.makedirs(npath)
+
+            # Create file  
+            # Write file contents
+            f = open(f"RRDG1/{file_name}", 'wb')
+            f.write(content)
+            f.close()
+         
+        else:
+            response_body = pickle.loads(s.recv(MAX_ALLOWED_SIZE)) #
+            print("Files: ") 
+            for i in range(len(response_body)):
+                print(f"{response_body[i]}")
 
     s.close()

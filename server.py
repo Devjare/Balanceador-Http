@@ -5,6 +5,18 @@ import os
 from os import listdir
 from os.path import isfile, join
 
+def get_file_data(file_path):
+    info  = { "size": 0, "bytes": bytes(0) }
+    f = open(file_path, "rb")
+    file_size = os.path.getsize(file_path)
+    # print(f.read()) 
+   
+    info['size'] = file_size
+    info['bytes'] = f.read()
+    f.close()
+   
+    return info
+
 if __name__ == "__main__":
     
     status = {
@@ -101,10 +113,38 @@ if __name__ == "__main__":
                     # clientsocket.send(msg)
                     clientsocket.close()
                 else:
+                    status_code = 404
+                    u_response_header = response_header + str(status_code) + f" {status_msg}"
+                    b_response_header = bytes(u_response_header, "utf-8")
+                    clientsocket.send(b_response_header)
+
                     print(f"{file_dir} doesn't exists.")
+
             else:
-                # Get the specified file.
-                print(f"GET {file_dir}/{file_name}")
+                ''' GET file '''
+                if os.path.exists(file_dir):
+                    # Get the specified file.
+                    file_data = get_file_data(f"{file_dir}/{file_name}")
+                    
+                    # prepare header
+                    header = response_header
+                    header = header + "Content-length: " + str(file_data['size']) + "\n"
+                    header = header + "\n" # LINEA EN BLANCO
+                    header = bytes(header, 'utf-8')
+       
+                    # Prepare file to send
+                    # msg = pickle.dumps(file_data['bytes'])
+                    msg = file_data['bytes']
+                    msg = header + msg
+                        
+                    clientsocket.send(msg)
 
-    
+                    print(f"GET {file_dir}/{file_name}")
 
+                else:
+                    status_code = 404
+                    u_response_header = response_header + str(status_code) + f" {status_msg}"
+                    b_response_header = bytes(u_response_header, "utf-8")
+                    clientsocket.send(b_response_header)
+
+                    print(f"{file_dir} doesn't exists.")
