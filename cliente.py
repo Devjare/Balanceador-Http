@@ -45,7 +45,10 @@ if __name__ == "__main__":
         print("Any request must include a source/destiny objective as 3rd parameter(i.e. PUT/GET source/destiny)")
     else:
         destination = sys.argv[3]
-    
+   
+    group = sys.argv[4]
+    algorithm = sys.argv[5] # Balancer selection method(RR, Hash, Random)
+
     file_to_upload = None 
     
     HEADERSIZE = 1024 # 1 Kb header MAX.
