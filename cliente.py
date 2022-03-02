@@ -79,10 +79,12 @@ if __name__ == "__main__":
         s.send(msg)
 
         response = s.recv(HEADERSIZE)
-        print("Server response: ", response)
+        print("Server response: ", str(response))
 
     else:
         print("GET REQUEST")
         header = bytes(header, "utf-8") # encode header
+        print("Send header: ", header)
+        s.send(header)
 
     s.close()

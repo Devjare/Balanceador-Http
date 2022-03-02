@@ -1,9 +1,18 @@
 import socket
+import pickle
 import sys
 import os
+from os import listdir
+from os.path import isfile, join
 
 if __name__ == "__main__":
-   
+    
+    status = {
+            "200": "OK",
+            "404": "NOT FOUND"
+            }
+
+        
     port = int(sys.argv[1])
     
     HEADERSIZE = 1024
@@ -12,6 +21,9 @@ if __name__ == "__main__":
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((socket.gethostname(), port))
     s.listen(5)
+
+    status_code = 200
+    response_header = ""
     
     while True:
         # now our endpoint knows about the OTHER endpoint.
@@ -19,27 +31,16 @@ if __name__ == "__main__":
         print(f"Connection from {address} has been established.")
         
         msg = clientsocket.recv(MAX_ALLOWED_SIZE)
-        # print("Client FULL: message: ")
-        # print("START =======================================================")
-        # print(msg)
-        # print(" END =======================================================")
         
-        # print("msg header:",msg[:HEADERSIZE])
-        # header = msg[:HEADERSIZE]
         header = str(msg).split("\\n\\n")[0]
         HEADERSIZE = len(bytes(header, 'utf-8')) - 1 # extra byte.
         print("HEADER RAW: ", header)
         print("HEADER RAW LEN: ", HEADERSIZE)
-        # print("HEADER STRING: ", header)
 
         ### Request info
         method =  "PUT" if "PUT" in header.split(" ")[0] else "GET"
         print("METHOD: ", str(method))
-
-        if(method == "PUT"): 
-            file_size = header.split(":", 1)[1].split("\\n")[0].strip()
-            print("File size: ", file_size)
-
+        
         ### FILE INFO
         file_path = header.split(" ")[1].split("\\n")[0].split("/")
         print("File path: ", file_path)
@@ -48,23 +49,48 @@ if __name__ == "__main__":
         
         print("File_dir: ", file_dir)
         print("File_name: ", file_name)
-       
-        ### FILE CONTENT
-        content = msg[HEADERSIZE:]
-        print("File content ====================================")
-        print("Fullmsg len: ", len(msg))
-        print(len(content))
 
-        # Create file  
-        ## Verify if dir doesn't exists already.
-        if not os.path.exists(file_dir):
-            npath = os.path.join(os.getcwd(), file_dir)
-            os.makedirs(npath)
+        if(method == "PUT"): 
+            file_size = header.split(":", 1)[1].split("\\n")[0].strip()
+            print("File size: ", file_size)
+ 
+            ### FILE CONTENT
+            content = msg[HEADERSIZE:]
+            print("File content ====================================")
+            print("Fullmsg len: ", len(msg))
+            print(len(content))
 
-        # Write file contents
-        f = open(f"{file_dir}/{file_name}", 'wb')
-        f.write(content)
-        f.close()
+            # Create file  
+            ## Verify if dir doesn't exists already.
+            if not os.path.exists(file_dir):
+                npath = os.path.join(os.getcwd(), file_dir)
+                os.makedirs(npath)
+
+            # Write file contents
+            f = open(f"{file_dir}/{file_name}", 'wb')
+            f.write(content)
+            f.close()
+         
+            status_msg = status[str(status_code)]
+            response_header = response_header + str(status_code) + f" {status_msg}\n\n"
+            print("server response: ",response_header)
+            clientsocket.send(bytes(response_header, "utf-8"))
+
+        else:
+            file_name = file_name[0:len(file_name)-1]
+            if(file_name == ""):
+                file_name = None
+                # Get list of files in dir.
+                if os.path.exists(file_dir):
+                    file_list = [f for f in listdir(file_dir) if isfile(join(file_dir, f))]
+                    print(f"Files on dir '{file_dir}: ", file_list)
+                    files = pickle.dumps(file_list)
+                    clientsocket.send(files)
+                else:
+                    print(f"{file_dir} doesn't exists.")
+            else:
+                # Get the specified file.
+                print(f"GET {file_dir}/{file_name}")
+
     
 
-        clientsocket.send(bytes("Message recieved!", "utf-8"))
