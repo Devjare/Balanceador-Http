@@ -9,3 +9,8 @@ python file_gen.py 1 100 G2_FILES
 # CREAR ARCHIVOS GRUPO 3
 rm -rf G3_FILES
 python file_gen.py 2 100 G3_FILES
+
+# PRUEBA PUT, GRUPO 1
+# primer argumento indica el algoritmo
+python cliente.py 0 PUT dirx/file2 RRCG1/FILE_220301230356071056
+

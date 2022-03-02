@@ -25,8 +25,8 @@ def get_file_data(file_path):
 
 def select_server(filename=None,method=RANDOM, rr_current=None):
     if(method == RR):
-        if(rr_current == HASH):
-            rr_current = RANDOM 
+        if(rr_current == 2):
+            return server_ports[0]
         return server_ports[rr_current+1]
     elif(method == HASH):
         selected = int(hashlib.sha1(s.encode("utf-8")).hexdigest(), 16) % 3
@@ -36,7 +36,8 @@ def select_server(filename=None,method=RANDOM, rr_current=None):
 
 if __name__ == "__main__":
     MAX_ALLOWED_SIZE = 1000 * 1000 * 100 # 100MB
-    port = int(sys.argv[1])
+    algorithm = int(sys.argv[1]) # Balancer selection method(RR, Hash, Random)
+    port = 9099 # DEFAULT PORT
 
     method = sys.argv[2]
     destination = None # Including filename
@@ -45,11 +46,29 @@ if __name__ == "__main__":
         print("Any request must include a source/destiny objective as 3rd parameter(i.e. PUT/GET source/destiny)")
     else:
         destination = sys.argv[3]
-   
-    group = sys.argv[4]
-    algorithm = sys.argv[5] # Balancer selection method(RR, Hash, Random)
-
+  
+    # group = sys.argv[4]
     file_to_upload = None 
+    if(method == "PUT"):
+        try:
+            file_to_upload = sys.argv[4]
+        except:
+            print("A put request must indicate which file to upload as 4th parameter.")
+     
+        with open("rr_next", "rw") as f:
+            current = f.read()
+            current_rr = int(current)
+            nxt = current_rr + 1 if current_rr < 2 else 0
+            f.write(str(current_rr + 1))
+       
+        if(algorithm == RANDOM):    
+            port = select_server(filename=None,method=RANDOM, rr_current=None)
+        elif(algorithm == RR):
+            port = select_server(filename=None,method=RR, rr_current=current_rr)
+        else:
+            port = select_server(filename=file_to_upload,method=HASH, rr_current=None)
+
+
     
     HEADERSIZE = 1024 # 1 Kb header MAX.
     
@@ -68,6 +87,7 @@ if __name__ == "__main__":
         except:
             print("A put request must indicate which file to upload as 4th parameter.")
       
+        port = select_server(filename=destination,method=RANDOM, rr_current=None):
         file_data = get_file_data(file_to_upload)
         # print("File data: ", file_data)
         
