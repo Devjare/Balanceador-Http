@@ -111,13 +111,6 @@ if __name__ == "__main__":
             print("Fullmsg len: ", len(response))
             print(len(content))
 
-            ## Verify if dir doesn't exists already.
-            # if not os.path.exists("RRDG1"):
-            #     npath = os.path.join(os.getcwd(), "RRDG1")
-            #     os.makedirs(npath)
-
-            # Create file  
-            # Write file contents
             f = open(f"RRDG1/{file_name}", 'wb')
             f.write(content)
             f.close()
