@@ -14,7 +14,7 @@ servers_ports = [ 9097, 9098, 9099 ]
 
 def get_metrics_file(method, algorithm, group):
     filename = ""
-    if(algorithm == RADNOM):
+    if(algorithm == RANDOM):
         filename = filename + "a"
     if(algorithm == RR):
         filename = filename + "rr"
@@ -23,6 +23,7 @@ def get_metrics_file(method, algorithm, group):
 
     activity = "c" if method == "PUT" else "d"
     filename = filename + f"_{activity}_{group}.metrics"
+    return filename
 
 def get_file_data(file_path):
     info  = { "size": 0, "bytes": bytes(0) }
@@ -85,15 +86,25 @@ if __name__ == "__main__":
             port = select_server(filename=file_to_upload,method=HASH)
             
 
+    group = sys.argv[5]
     
     HEADERSIZE = 1024 # 1 Kb header MAX.
     
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((socket.gethostname(), port))
 
+    # INICIAR ACTIVIDAD
+
     header = f"{method} {destination}"
-    
+
+    start = 0
+    end = 0
+    ellapsed = 0 # Time taken on the operation GET or PUT
+
     if(method == "PUT"):
+        # Esta parte es la que se repetiria 100 veces, por cada archivo, por cada tipo
+        # de algoritmo, por cada grupo.
+        # ================================= PUT REQUESTS =================================
         # EJEMPLO PUT:
         # > $ python cliente.py 9099 PUT dirx/file2 RRCG1/FILE_220301230356071056
 
@@ -124,14 +135,15 @@ if __name__ == "__main__":
 
         response = s.recv(HEADERSIZE)
         end = datetime.now()
-        ellapsed = end - start
 
-        metrics_file = get_metrics_file(algorithm, group)
+        ellapsed = (end - start).total_seconds() * 1000
+        print("Ellapsed = %f, type: %s" % (ellapsed, type(ellapsed)))
 
-        print("Time taken to upload file: ", ellapsed.total_seconds() * 1000)
+        # print("Time taken to upload file: ", ellapsed.total_seconds() * 1000)
         print("Server response: ", str(response))
 
     else:
+        # ================================= GET REQUESTS =================================
         print("GET REQUEST")
         file_name = header.split(" ")[1].split("/")[1]
         print("Filename: ", file_name)
@@ -166,5 +178,20 @@ if __name__ == "__main__":
             print("Files: ") 
             for i in range(len(response_body)):
                 print(f"{response_body[i]}")
+
+     
+    metrics_file = get_metrics_file(method, algorithm, group)
+    print("metrics File to write: ", metrics_file)
+    # Write to file:
+    file_path = os.path.join(os.getcwd(), metrics_file)
+    if(os.path.exists(file_path)):
+        # Append to current file.
+        with open(file_path, "a") as f:
+            f.write(str(f"\n{ellapsed}"))
+    else:
+        # Create file
+        with open(file_path, "w") as f:
+            f.write(str(ellapsed))
+
 
     s.close()

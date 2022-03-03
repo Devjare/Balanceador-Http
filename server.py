@@ -40,7 +40,7 @@ if __name__ == "__main__":
     while True:
         # now our endpoint knows about the OTHER endpoint.
         clientsocket, address = s.accept()
-        print(f"Connection from {address} has been established.")
+        print(f"Connection from {address} has been established on server port: {port}")
         
         msg = clientsocket.recv(MAX_ALLOWED_SIZE)
         
