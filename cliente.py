@@ -136,8 +136,20 @@ if __name__ == "__main__":
         # Esta parte es la que se repetiria 100 veces, por cada archivo, por cada tipo
         # de algoritmo, por cada grupo.
         # ================================= PUT REQUESTS =================================
-        # EJEMPLO PUT:
-        # > $ python cliente.py 9099 PUT dirx/file2 RRCG1/FILE_220301230356071056
+        # ESTRUCTURA PUT
+        # > $ python cliente.py n req destiny source group
+        # donde:
+        # n = algoritmo balanceo(0)Round robin(1), Hash(2))
+        # req = request method(GET/PUT)
+        # destiny = Destination or where to store the file on server.
+        # source = File to upload, to be stored on destiny.
+        # group = test files group(MIN(1), MED(2), BIG(3))
+        # EJEMPLO PUT
+        # > $ python cliente.py 1 PUT dirx/file2 RRCG1/FILE_220301230356071056 1
+        # Subir archivo FILE_2203... a directorio dirx/file2 en servidor,
+        # utilizando Round Robin(n=1) para seleccionar servidor, y subir los archivos
+        # del grupo 1(MIN)
+        # NOTA PARA DESARROLLADOR: El grupo no es necesario si se iterara a traves de un script de bash.
 
         print("PUT REQUEST")
         try:
@@ -203,13 +215,8 @@ if __name__ == "__main__":
             print("Fullmsg len: ", len(response))
             print(len(content))
 
-            save_dir = get_save_dir(method,algorithm,group)
-            if not os.path.exists(save_dir):
-                print(f"Path: {file_dir} doesn't exists, creating...")
-                npath = os.path.join(os.getcwd(), save_dir)
-                os.makedirs(npath)
-
-            f = open(f"{save_dir}/{file_name}", 'wb')
+            print("Saving to: ", file_name)
+            f = open(f"{file_name}", 'wb')
             f.write(content)
             f.close()
 
@@ -220,18 +227,18 @@ if __name__ == "__main__":
                 print(f"{response_body[i]}")
 
 
-    # metrics_file = get_metrics_file(method, algorithm, group)
-    # print("metrics File to write: ", metrics_file)
-    # # Write to file:
-    # file_path = os.path.join(os.getcwd(), metrics_file)
-    # if(os.path.exists(file_path)):
-    #     # Append to current file.
-    #     with open(file_path, "a") as f:
-    #         f.write(str(f"\n{ellapsed}"))
-    # else:
-    #     # Create file
-    #     with open(file_path, "w") as f:
-    #         f.write(str(ellapsed))
+    metrics_file = get_metrics_file(method, algorithm, group)
+    print("metrics File to write: ", metrics_file)
+    # Write to file:
+    file_path = os.path.join(os.getcwd(), metrics_file)
+    if(os.path.exists(file_path)):
+        # Append to current file.
+        with open(file_path, "a") as f:
+            f.write(str(f"\n{ellapsed}"))
+    else:
+        # Create file
+        with open(file_path, "w") as f:
+            f.write(str(ellapsed))
 
 
     s.close()
