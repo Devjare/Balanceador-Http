@@ -12,7 +12,7 @@ def gen_random_name(path):
         os.makedirs(npath)
         basename = f"{npath}/FILE"
 
-    suffix = datetime.datetime.now().strftime("%y%m%d%H%M%S%f")
+    suffix = datetime.datetime.now().strftime("%f")
     return "_".join([basename, suffix])
 
 def generate_file(name, s_min, s_max):
@@ -39,8 +39,8 @@ def generate_files(n, group, path):
         cdir = os.getcwd()
         ranname = gen_random_name(path)
         filename = os.path.join(cdir, ranname)
+        print(f"Filename: {filename}")
         generate_file(filename, MIN, MAX)
-        time.sleep(1)
 
 if __name__ == "__main__":
     group = int(sys.argv[1])

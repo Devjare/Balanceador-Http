@@ -75,6 +75,7 @@ if __name__ == "__main__":
             # Create file  
             ## Verify if dir doesn't exists already.
             if not os.path.exists(file_dir):
+                print(f"Path: {file_dir} doesn't exists, creating...")
                 npath = os.path.join(os.getcwd(), file_dir)
                 os.makedirs(npath)
 
@@ -143,6 +144,7 @@ if __name__ == "__main__":
 
                 else:
                     status_code = 404
+                    status_msg = status[str(status_code)]
                     u_response_header = response_header + str(status_code) + f" {status_msg}"
                     b_response_header = bytes(u_response_header, "utf-8")
                     clientsocket.send(b_response_header)
