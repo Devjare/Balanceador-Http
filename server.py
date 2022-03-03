@@ -84,9 +84,9 @@ if __name__ == "__main__":
             f.close()
          
             status_msg = status[str(status_code)]
-            response_header = response_header + str(status_code) + f" {status_msg}\n\n"
-            print("server response: ",response_header)
-            clientsocket.send(bytes(response_header, "utf-8"))
+            u_response_header = response_header + str(status_code) + f" {status_msg}\n\n"
+            print("server response: ",u_response_header)
+            clientsocket.send(bytes(u_response_header, "utf-8"))
             clientsocket.close()
 
         else:

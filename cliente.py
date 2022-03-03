@@ -36,8 +36,8 @@ def select_server(filename=None,method=RANDOM, rr_current=None):
         return servers_ports[current_rr]
         # return server_ports[rr_current+1]
     elif(method == HASH):
-        selected = int(hashlib.sha1(s.encode("utf-8")).hexdigest(), 16) % 3
-        return server_ports[selected]
+        selected = int(hashlib.sha1(filename.encode("utf-8")).hexdigest(), 16) % 3
+        return servers_ports[selected]
     else:
         return rnd.choice(servers_ports) 
 
@@ -63,15 +63,14 @@ if __name__ == "__main__":
             print("A put request must indicate which file to upload as 4th parameter.")
     
         if(algorithm == RANDOM):    
-            port = select_server(filename=None,method=RANDOM, rr_current=None)
+            port = select_server(filename=None,method=RANDOM)
         elif(algorithm == RR):
             current_rr = None
             port = select_server(filename=None,method=RR)
             print("Port RR: ", port)
-            # port = server_ports[current_rr]
         else:
-            port = select_server(filename=file_to_upload,method=HASH, rr_current=None)
-
+            port = select_server(filename=file_to_upload,method=HASH)
+            
 
     
     HEADERSIZE = 1024 # 1 Kb header MAX.
