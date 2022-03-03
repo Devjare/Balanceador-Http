@@ -4,12 +4,25 @@ import hashlib
 import sys
 import pickle
 import os
+from datetime import datetime
 
 RANDOM = 0
 RR = 1 #Round Robin
 HASH = 2 # HASH
 
 servers_ports = [ 9097, 9098, 9099 ]
+
+def get_metrics_file(method, algorithm, group):
+    filename = ""
+    if(algorithm == RADNOM):
+        filename = filename + "a"
+    if(algorithm == RR):
+        filename = filename + "rr"
+    if(algorithm == HASH):
+        filename = filename + "h"
+
+    activity = "c" if method == "PUT" else "d"
+    filename = filename + f"_{activity}_{group}.metrics"
 
 def get_file_data(file_path):
     info  = { "size": 0, "bytes": bytes(0) }
@@ -106,9 +119,16 @@ if __name__ == "__main__":
         msg = header + msg
         
         # process request 
+        start = datetime.now()
         s.send(msg)
 
         response = s.recv(HEADERSIZE)
+        end = datetime.now()
+        ellapsed = end - start
+
+        metrics_file = get_metrics_file(algorithm, group)
+
+        print("Time taken to upload file: ", ellapsed.total_seconds() * 1000)
         print("Server response: ", str(response))
 
     else:

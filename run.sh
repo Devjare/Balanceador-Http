@@ -10,7 +10,7 @@ python file_gen.py 1 100 G2_FILES
 rm -rf G3_FILES
 python file_gen.py 2 100 G3_FILES
 
-# PRUEBA PUT, GRUPO 1
+# PRUEBA PUT, GRUPO 1, RANDOM
 # primer argumento indica el algoritmo
 python cliente.py 0 PUT dirx/file2 RRCG1/FILE_220301230356071056
 
