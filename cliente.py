@@ -25,9 +25,16 @@ def get_file_data(file_path):
 
 def select_server(filename=None,method=RANDOM, rr_current=None):
     if(method == RR):
-        if(rr_current == 2):
-            return server_ports[0]
-        return server_ports[rr_current+1]
+        current_rr = None
+        with open("rr_next", "r") as f:
+            current = str(f.read())
+            current_rr = int(current)
+        with open("rr_next", "w") as f:
+            nxt_srvr = current_rr + 1 if current_rr < 2 else 0
+            f.write(str(nxt_srvr))
+
+        return servers_ports[current_rr]
+        # return server_ports[rr_current+1]
     elif(method == HASH):
         selected = int(hashlib.sha1(s.encode("utf-8")).hexdigest(), 16) % 3
         return server_ports[selected]
@@ -54,17 +61,14 @@ if __name__ == "__main__":
             file_to_upload = sys.argv[4]
         except:
             print("A put request must indicate which file to upload as 4th parameter.")
-     
-        with open("rr_next", "rw") as f:
-            current = f.read()
-            current_rr = int(current)
-            nxt = current_rr + 1 if current_rr < 2 else 0
-            f.write(str(current_rr + 1))
-       
+    
         if(algorithm == RANDOM):    
             port = select_server(filename=None,method=RANDOM, rr_current=None)
         elif(algorithm == RR):
-            port = select_server(filename=None,method=RR, rr_current=current_rr)
+            current_rr = None
+            port = select_server(filename=None,method=RR)
+            print("Port RR: ", port)
+            # port = server_ports[current_rr]
         else:
             port = select_server(filename=file_to_upload,method=HASH, rr_current=None)
 
@@ -87,7 +91,7 @@ if __name__ == "__main__":
         except:
             print("A put request must indicate which file to upload as 4th parameter.")
       
-        port = select_server(filename=destination,method=RANDOM, rr_current=None):
+        port = select_server(filename=destination,method=RANDOM, rr_current=None)
         file_data = get_file_data(file_to_upload)
         # print("File data: ", file_data)
         
