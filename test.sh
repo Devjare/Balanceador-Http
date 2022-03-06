@@ -1,7 +1,7 @@
-for filename in /RRCG1/*; do
-    for ((i=0; i<=3; i++)); do
-        echo filename
-        # ./MyProgram.exe "$filename" "Logs/$(basename "$filename" .txt)_Log$i.txt"
-    done
-done
+# TEST GET
+# python cliente.py 1 GET PUT Dir/File 1
+# python cliente.py 1 GET PUT File 1
 
+./test_g1.sh
+./test_g2.sh
+./metrics.sh
