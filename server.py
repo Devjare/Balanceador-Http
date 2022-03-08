@@ -40,53 +40,61 @@ if __name__ == "__main__":
     while True:
         # now our endpoint knows about the OTHER endpoint.
         clientsocket, address = s.accept()
-        print(f"Connection from {address} has been established on server port: {port}")
-        
+        # print(f"Connection from {address} has been established on server port: {port}")
+       
         msg = clientsocket.recv(MAX_ALLOWED_SIZE)
         
         header = str(msg).split("\\n\\n")[0]
         HEADERSIZE = len(bytes(header, 'utf-8')) - 1 # extra byte.
-        print("HEADER RAW: ", header)
-        print("HEADER RAW LEN: ", HEADERSIZE)
+        # print("HEADER RAW: ", header)
+        # print("HEADER RAW LEN: ", HEADERSIZE)
 
         ### Request info
         method =  "PUT" if "PUT" in header.split(" ")[0] else "GET"
-        print("METHOD: ", str(method))
+        # print("METHOD: ", str(method))
         
         ### FILE INFO
         file_path = header.split(" ")[1].split("\\n")[0].split("/")
-        print("File path: ", file_path)
+        # print("File path: ", file_path)
         file_dir = file_path[0] # File_dir is always specified.
         file_name = None if file_path[1] == '' else file_path[1]
         
-        print("File_dir: ", file_dir)
-        print("File_name: ", file_name)
+        # print("File_dir: ", file_dir)
+        # print("File_name: ", file_name)
+        stored_size = "0"
 
         if(method == "PUT"): 
             file_size = header.split(":", 1)[1].split("\\n")[0].strip()
-            print("File size: ", file_size)
- 
+            stored_size = file_size
+            # print("File size: ", file_size)
+            
             ### FILE CONTENT
             content = msg[HEADERSIZE:]
-            print("File content ====================================")
-            print("Fullmsg len: ", len(msg))
-            print(len(content))
+            # print("File content ====================================")
+            # print("Fullmsg len: ", len(msg))
+       
+            while(len(content) < int(file_size)):
+                nmsg = clientsocket.recv(MAX_ALLOWED_SIZE)
+                print("NEW MESSAGE", nmsg)
+                content += nmsg
+ 
 
             # Create file  
             ## Verify if dir doesn't exists already.
             if not os.path.exists(file_dir):
-                print(f"Path: {file_dir} doesn't exists, creating...")
+                # print(f"Path: {file_dir} doesn't exists, creating...")
                 npath = os.path.join(os.getcwd(), file_dir)
                 os.makedirs(npath)
 
             # Write file contents
             f = open(f"{file_dir}/{file_name}", 'wb')
             f.write(content)
+            print(f"Uploading file {file_dir}/{file_name} of size: {len(content)}")
             f.close()
          
             status_msg = status[str(status_code)]
             u_response_header = response_header + str(status_code) + f" {status_msg}\n\n"
-            print("server response: ",u_response_header)
+            # print("server response: ",u_response_header)
             clientsocket.send(bytes(u_response_header, "utf-8"))
             clientsocket.close()
 
@@ -97,16 +105,16 @@ if __name__ == "__main__":
                 # Get list of files in dir.
                 if os.path.exists(file_dir):
                     file_list = [f for f in listdir(file_dir) if isfile(join(file_dir, f))]
-                    print(f"Files on dir '{file_dir}: ", file_list)
+                    # print(f"Files on dir '{file_dir}: ", file_list)
                     files = pickle.dumps(file_list)
 
                     status_msg = status[str(status_code)]
                     # u_response_header, u_ for unique, using response_header, overrited the value
                     # for all next requests.
                     u_response_header = response_header + str(status_code) + f" {status_msg}"
-                    print("server response: ",u_response_header)
+                    # print("server response: ",u_response_header)
                     b_response_header = bytes(u_response_header, "utf-8")
-                    print("response header on bytes: ", b_response_header)
+                    # print("response header on bytes: ", b_response_header)
                     clientsocket.send(b_response_header)
                     # print("Response message full: ", msg)
 
@@ -119,7 +127,7 @@ if __name__ == "__main__":
                     b_response_header = bytes(u_response_header, "utf-8")
                     clientsocket.send(b_response_header)
 
-                    print(f"{file_dir} doesn't exists.")
+                    # print(f"{file_dir} doesn't exists.")
 
             else:
                 ''' GET file '''
@@ -140,7 +148,7 @@ if __name__ == "__main__":
                         
                     clientsocket.send(msg)
 
-                    print(f"GET {file_dir}/{file_name}")
+                    # print(f"GET {file_dir}/{file_name}")
 
                 else:
                     status_code = 404
@@ -149,4 +157,20 @@ if __name__ == "__main__":
                     b_response_header = bytes(u_response_header, "utf-8")
                     clientsocket.send(b_response_header)
 
-                    print(f"{file_dir} doesn't exists.")
+                    # print(f"{file_dir} doesn't exists.")
+      
+        # print(f"Working on server {port}")
+        server_metrics_file = f"server_{port}.metrics"
+        file_path = os.path.join(os.getcwd(), server_metrics_file)
+        try:
+            # print(f"Writing on: {file_path}")
+            if(os.path.exists(file_path)):
+                # Append to current file.
+                with open(file_path, "a") as f:
+                    f.write(stored_size + "\n")
+            else:
+                # Create file
+                with open(file_path, "w") as f:
+                    f.write(stored_size + "\n")
+        except Exception as ex:
+            print(ex)

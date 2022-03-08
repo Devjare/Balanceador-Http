@@ -74,7 +74,7 @@ def select_server(filename=None,method=RANDOM, rr_current=None):
         with open("rr_next", "w") as f:
             nxt_srvr = current_rr + 1 if current_rr < 2 else 0
             f.write(str(nxt_srvr))
-
+        # print("Using server: ",  servers_ports[current_rr])
         return servers_ports[current_rr]
     # return server_ports[rr_current+1]
     elif(method == HASH):
@@ -116,9 +116,10 @@ if __name__ == "__main__":
         destination_rawname = destination.split("/")[1]
         if(fname_rawname != destination_rawname):
             continue
-        print(f"fname={fname}, destination={destination}")
+        # print(f"fname={fname}, destination={destination}")
         # print(f"{method} on file: {fname}")
-        port = select_server(filename=fname,method=HASH)
+        if(algorithm == HASH):
+            port = select_server(filename=fname,method=HASH)
         
         file_to_upload = fname 
 
@@ -138,7 +139,7 @@ if __name__ == "__main__":
         # print(test_file_list)
         if(method == "PUT"):
         
-           print("File to uplaod: ", file_to_upload)
+           # print("File to uplaod: ", file_to_upload)
            file_data = get_file_data(file_to_upload)
         
            # prepare header
@@ -152,7 +153,8 @@ if __name__ == "__main__":
         
            # process request 
            start = datetime.now()
-           s.send(msg)
+           s.sendall(msg)
+           # s.send(msg)
             
             # Process response
            response = s.recv(HEADERSIZE)
@@ -166,34 +168,34 @@ if __name__ == "__main__":
         
         else:
            # ================================= GET REQUESTS =================================
-           print("GET REQUEST")
+           # print("GET REQUEST")
            file_name = header.split(" ")[1].split("/")[1]
-           print("Filename: ", file_name)
+           # print("Filename: ", file_name)
            header = bytes(header, "utf-8") # encode header
-           print("Send header: ", header)
+           # print("Send header: ", header)
            s.send(header)
         
            response = s.recv(MAX_ALLOWED_SIZE) #
-           print("Full response: ", response)
+           # print("Full response: ", response)
            if('404' in str(response)):
                print("File not found")
            elif('Content-length' in str(response)):
-               print("Gotten a file!, downloading...")
+               # print("Gotten a file!, downloading...")
         
                header = str(response).split("\\n\\n")[0]
                HEADERSIZE = len(bytes(header, 'utf-8')) # extra byte.
-               print("HEADER RAW: ", header)
-               print("HEADER RAW LEN: ", HEADERSIZE)
+               # print("HEADER RAW: ", header)
+               # print("HEADER RAW LEN: ", HEADERSIZE)
         
                file_size = header.split(":", 1)[1].split("\\n")[0].strip()
-               print("File size: ", file_size)
+               # print("File size: ", file_size)
         
                content = response[HEADERSIZE:]
-               print("File content ====================================")
-               print("Fullmsg len: ", len(response))
-               print(len(content))
+               # print("File content ====================================")
+               # print("Fullmsg len: ", len(response))
+               # print(len(content))
         
-               print("Saving to: ", file_name)
+               # print("Saving to: ", file_name)
                f = open(f"{file_name}", 'wb')
                f.write(content)
                f.close()
@@ -206,7 +208,7 @@ if __name__ == "__main__":
         
 
         metrics_file = get_metrics_file(method, algorithm, group)
-        print("metrics File to write: ", metrics_file)
+        # print("metrics File to write: ", metrics_file)
         # Write to file:
         file_path = os.path.join(os.getcwd(), metrics_file)
         if(os.path.exists(file_path)):

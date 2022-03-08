@@ -31,8 +31,11 @@ if __name__ == "__main__":
 
     metrics_file = f"{algorithm_prefix}_{method_prefix}_{group_prefix}.metrics"
 
-    with open(os.path.join(os.getcwd(), metrics_file), "r") as metrics_file:
-        data = metrics_file.read().split("\n")
-        median = get_median(data)
-        source = f"{algorithm_prefix.upper()}{method_prefix.upper()}G{group_prefix}"
-        print(f"Data median for {source} = {median}")
+    try:
+        with open(os.path.join(os.getcwd(), metrics_file), "r") as metrics_file:
+            data = metrics_file.read().split("\n")
+            median = get_median(data)
+            source = f"{algorithm_prefix.upper()}{method_prefix.upper()}G{group_prefix}"
+            print(f"Median time for {source} = {median}s")
+    except:
+        print(f"Theres no metrics file: {metrics_file}, run tests first.")

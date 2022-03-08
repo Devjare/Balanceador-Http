@@ -3,7 +3,7 @@
 ### Running the code.
 
 In order to run the tests, firs the servers must be enabled.
-To do so, run the script "server_run.sh". If server ports are changed
+To do so, run the script "servers_run.sh". If server ports are changed
 in the file, then those ports should also change on the array named
 "server_ports" on client.py directly to match.
 

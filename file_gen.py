@@ -24,10 +24,11 @@ def generate_file(name, s_min, s_max):
     with open(name, 'wb') as f:
         f.write(b'0' * size)
 
-KB_UNIT = 1000
+B_UNIT = 1
+KB_UNIT = B_UNIT * 1000
 MB_UNIT = KB_UNIT * 1000
 GROUPS = [
-        { 'min': 1, 'max': KB_UNIT * 10 }, 
+        { 'min': B_UNIT, 'max': KB_UNIT * 10 }, 
         { 'min': KB_UNIT * 10, 'max': MB_UNIT }, 
         { 'min': MB_UNIT, 'max': MB_UNIT * 10 }
         ]

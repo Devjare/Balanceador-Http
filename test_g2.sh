@@ -1,24 +1,61 @@
 #!/bin/bash
 
-rm *_2.metrics
+function getServerMetrics {
+    # Server metrics 9097
+    python get_server_metrics.py 9097
+    # Server metrics 9098
+    python get_server_metrics.py 9098
+    # Server metrics 9099
+    python get_server_metrics.py 9099
+}
 
-# TEST PUT GROUP 2 Round Robin
-for FILE in $(pwd)/G2_FILES/*; 
-    do 
-        python $(pwd)/cliente.py 1 2 PUT "RRCG2/${FILE##*/}";
-        # python $(pwd)/tpy.py "$FILE"; 
-done
+export G=2
+export ALG=0
+
+# remove metrics existing.
+rm *_$G.metrics
+# Remove existing loaded files
+rm -rf ACG${G}
+rm -rf RRCG${G}
+rm -rf HCG${G}
 
 # TEST PUT GROUP 2 Random
-for FILE in $(pwd)/G2_FILES/*; 
+for FILE in $(pwd)/G${G}_FILES/*; 
     do 
-        python $(pwd)/cliente.py 0 2 PUT "ACG2/${FILE##*/}";
-        # python $(pwd)/tpy.py "$FILE"; 
+        python $(pwd)/cliente.py $ALG $G PUT "ACG${G}/${FILE##*/}";
 done
 
-# TEST PUT GROUP 2 Hash
-for FILE in $(pwd)/G2_FILES/*; 
+# Metrics for Random PUT Group 2
+python get_metrics.py $ALG PUT $G
+echo "Server storage for RANDOM GROUP ${G}"
+getServerMetrics
+rm server_*.metrics
+
+export ALG=1
+
+# TEST PUT GROUP 2 Round Robin
+for FILE in $(pwd)/G${G}_FILES/*; 
     do 
-        python $(pwd)/cliente.py 2 2 PUT "HCG2/${FILE##*/}";
-        # python $(pwd)/tpy.py "$FILE"; 
+        python $(pwd)/cliente.py $ALG $G PUT "RRCG${G}/${FILE##*/}";
 done
+
+# Metrics for Round Robin PUT Group 2
+python get_metrics.py $ALG PUT $G
+echo "Server storage for Round Robin GROUP ${G}"
+getServerMetrics
+rm server_*.metrics
+
+
+export ALG=2
+
+# TEST PUT GROUP 2 HASH
+for FILE in $(pwd)/G${G}_FILES/*; 
+    do 
+        python $(pwd)/cliente.py $ALG $G PUT "HCG${G}/${FILE##*/}";
+done
+
+# Metrics for Hash PUT Group 2
+python get_metrics.py $ALG PUT $G
+echo "Server storage for Hash GROUP ${G}"
+getServerMetrics
+rm server_*.metrics
