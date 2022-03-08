@@ -59,3 +59,8 @@ python get_metrics.py $ALG PUT $G
 echo "Server storage for Hash GROUP ${G}"
 getServerMetrics
 rm server_*.metrics
+
+# TEST GETS
+rm -rf ADG${G}
+rm -rf RRDG${G}
+rm -rf HDG${G}

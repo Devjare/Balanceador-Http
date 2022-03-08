@@ -13,7 +13,7 @@ HASH = 2 # HASH
 
 servers_ports = [ 9097, 9098, 9099 ]
 
-def get_save_dir(method,algorithm,group):
+def get_save_dir(algorithm,group):
     P1 = P2 = P3 = ""
     if(algorithm == RANDOM): 
         P1 = "A"
@@ -175,6 +175,7 @@ if __name__ == "__main__":
            # print("Send header: ", header)
            s.send(header)
         
+            
            response = s.recv(MAX_ALLOWED_SIZE) #
            # print("Full response: ", response)
            if('404' in str(response)):
@@ -191,16 +192,28 @@ if __name__ == "__main__":
                # print("File size: ", file_size)
         
                content = response[HEADERSIZE:]
+               while(len(content) < int(file_size)):
+                   nmsg = s.recv(MAX_ALLOWED_SIZE)
+                   # print("NEW MESSAGE", nmsg)
+                   content += nmsg
                # print("File content ====================================")
                # print("Fullmsg len: ", len(response))
                # print(len(content))
         
-               # print("Saving to: ", file_name)
-               f = open(f"{file_name}", 'wb')
+               download_folder = get_save_dir(algorithm, group)
+               file_path = f"{download_folder}/{file_name}"
+               if not os.path.exists(download_folder):
+                   # print(f"Path: {file_dir} doesn't exists, creating...")
+                   npath = os.path.join(os.getcwd(), download_folder)
+                   os.makedirs(npath)
+
+               # print("Saving to: ", file_path)
+               f = open(f"{file_path}", 'wb')
                f.write(content)
                f.close()
         
            else:
+               # Retrieving list of files.
                response_body = pickle.loads(s.recv(MAX_ALLOWED_SIZE)) #
                print("Files: ") 
                for i in range(len(response_body)):
