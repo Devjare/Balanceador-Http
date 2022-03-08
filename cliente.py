@@ -207,7 +207,7 @@ if __name__ == "__main__":
                    npath = os.path.join(os.getcwd(), download_folder)
                    os.makedirs(npath)
 
-               # print("Saving to: ", file_path)
+               print("Saving to: ", file_path)
                f = open(f"{file_path}", 'wb')
                f.write(content)
                f.close()
