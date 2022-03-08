@@ -44,7 +44,7 @@ do
 
         for FILE in $(pwd)/G${G}_FILES/*; 
             do 
-                python $(pwd)/cliente.py $ALG $G PUT "{$ALG_INITIALS}CG${G}/${FILE##*/}";
+                python $(pwd)/cliente.py $ALG $G PUT "${ALG_INITIALS}CG${G}/${FILE##*/}";
         done
         
         # Metrics for Random PUT Group 1
@@ -87,7 +87,7 @@ do
 
         for FILE in $(pwd)/G${G}_FILES/*; 
             do 
-                python $(pwd)/cliente.py $ALG $G GET "{$ALG_INITIALS}CG${G}/${FILE##*/}";
+                python $(pwd)/cliente.py $ALG $G GET "${ALG_INITIALS}DG${G}/${FILE##*/}";
         done
         
         # Metrics for Random PUT Group 1
@@ -97,3 +97,7 @@ do
         rm server_*.metrics
     done
 done
+
+# KILL PYTHON SERVERS PROCESS.
+kill -9 $(ps -e | grep python | awk '{print $1}')                                   [±master ✓]
+

@@ -146,7 +146,7 @@ if __name__ == "__main__":
                     msg = file_data['bytes']
                     msg = header + msg
                         
-                    clientsocket.send(msg)
+                    clientsocket.sendall(msg)
 
                     # print(f"GET {file_dir}/{file_name}")
 
