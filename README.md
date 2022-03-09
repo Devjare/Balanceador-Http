@@ -37,10 +37,8 @@ These 2 scripts only call the 9 differnet configurations for client.py
 One configuration for each file group, algorithm, and request method.
 Additionaly, the output is saved to a results file(restuls_put.txt, and results_get.txt).
 
-### metrics.sh
 
-A helper script, used only while running the client test, it runs the get_metrics.py
-with arguments for each group, algorithm and method, to read from the generated metrics
-file(This files is deleted automatically on the tests scripts)
+## get_metrics.py and get_server_metrics.py
 
-
+These 2 python scripts, read the outputs for the server and client, which are written on some special
+files created only for this purpose, for that reason, those files are deleted inmediatly, in order to allow new metrics each time tests are run.
