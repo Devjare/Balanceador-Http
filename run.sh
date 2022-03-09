@@ -17,4 +17,4 @@ rm -rf *C*
 rm *.metrics
 
 # Stop servers
-kill -9 $(ps -e | grep python | awk '{print $1}')
+sudo kill -9 $(ps -e | grep python | awk '{print $1}')
