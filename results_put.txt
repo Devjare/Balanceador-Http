@@ -1,0 +1,55 @@
+========================== PUT TESTS ====================================
+Grupo 1 Algoritmo 0:RANDOM
+Median time for ACG1 = 0.24295000000000003s
+Server storage for RANDOM GROUP 1
+Server 9097, used storage: 143772 Bytes, 143.772 Kilobytes
+Server 9098, used storage: 142365 Bytes, 142.365 Kilobytes
+Server 9099, used storage: 186060 Bytes, 186.06 Kilobytes
+Grupo 1 Algoritmo 1:Round Robin
+Median time for RRCG1 = 0.23534999999999998s
+Server storage for Round Robin GROUP 1
+Server 9097, used storage: 160940 Bytes, 160.94 Kilobytes
+Server 9098, used storage: 159982 Bytes, 159.982 Kilobytes
+Server 9099, used storage: 151275 Bytes, 151.275 Kilobytes
+Grupo 1 Algoritmo 2:HASH
+Median time for HCG1 = 0.25363s
+Server storage for HASH GROUP 1
+Server 9097, used storage: 191242 Bytes, 191.242 Kilobytes
+Server 9098, used storage: 129458 Bytes, 129.458 Kilobytes
+Server 9099, used storage: 151497 Bytes, 151.497 Kilobytes
+Grupo 2 Algoritmo 0:RANDOM
+Median time for ACG2 = 4.498460000000001s
+Server storage for RANDOM GROUP 2
+Server 9097, used storage: 13281646 Bytes, 13281.646 Kilobytes
+Server 9098, used storage: 18392224 Bytes, 18392.224 Kilobytes
+Server 9099, used storage: 21179572 Bytes, 21179.572 Kilobytes
+Grupo 2 Algoritmo 1:Round Robin
+Median time for RRCG2 = 5.049059999999999s
+Server storage for Round Robin GROUP 2
+Server 9097, used storage: 18545237 Bytes, 18545.237 Kilobytes
+Server 9098, used storage: 16302699 Bytes, 16302.699 Kilobytes
+Server 9099, used storage: 18005506 Bytes, 18005.506 Kilobytes
+Grupo 2 Algoritmo 2:HASH
+Median time for HCG2 = 4.58315s
+Server storage for HASH GROUP 2
+Server 9097, used storage: 22907786 Bytes, 22907.786 Kilobytes
+Server 9098, used storage: 13085050 Bytes, 13085.05 Kilobytes
+Server 9099, used storage: 16860606 Bytes, 16860.606 Kilobytes
+Grupo 3 Algoritmo 0:RANDOM
+Median time for ACG3 = 8.52303s
+Server storage for RANDOM GROUP 3
+Server 9097, used storage: 210554998 Bytes, 210554.998 Kilobytes
+Server 9098, used storage: 126910437 Bytes, 126910.437 Kilobytes
+Server 9099, used storage: 192745280 Bytes, 192745.28 Kilobytes
+Grupo 3 Algoritmo 1:Round Robin
+Median time for RRCG3 = 8.34125s
+Server storage for Round Robin GROUP 3
+Server 9097, used storage: 158706348 Bytes, 158706.348 Kilobytes
+Server 9098, used storage: 164336457 Bytes, 164336.457 Kilobytes
+Server 9099, used storage: 207167910 Bytes, 207167.91 Kilobytes
+Grupo 3 Algoritmo 2:HASH
+Median time for HCG3 = 8.38382s
+Server storage for HASH GROUP 3
+Server 9097, used storage: 194939937 Bytes, 194939.937 Kilobytes
+Server 9098, used storage: 188380496 Bytes, 188380.496 Kilobytes
+Server 9099, used storage: 146890282 Bytes, 146890.282 Kilobytes

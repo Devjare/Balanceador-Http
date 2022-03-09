@@ -75,7 +75,7 @@ if __name__ == "__main__":
        
             while(len(content) < int(file_size)):
                 nmsg = clientsocket.recv(MAX_ALLOWED_SIZE)
-                print("NEW MESSAGE", nmsg)
+                # print("NEW MESSAGE", nmsg)
                 content += nmsg
  
 
@@ -145,8 +145,12 @@ if __name__ == "__main__":
                     # msg = pickle.dumps(file_data['bytes'])
                     msg = file_data['bytes']
                     msg = header + msg
-                        
-                    clientsocket.sendall(msg)
+                    
+                    try:
+                        print(f"Sending file: {file_dir}/{file_name}")
+                        clientsocket.sendall(msg)
+                    except socket.error as exc:
+                        print("Exception: ", exc)
 
                     # print(f"GET {file_dir}/{file_name}")
 

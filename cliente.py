@@ -173,13 +173,14 @@ if __name__ == "__main__":
            # print("Filename: ", file_name)
            header = bytes(header, "utf-8") # encode header
            # print("Send header: ", header)
+           start = datetime.now()
            s.send(header)
         
             
            response = s.recv(MAX_ALLOWED_SIZE) #
            # print("Full response: ", response)
            if('404' in str(response)):
-               print("File not found")
+               print(f"File: {file_name} not found")
            elif('Content-length' in str(response)):
                # print("Gotten a file!, downloading...")
         
@@ -196,6 +197,9 @@ if __name__ == "__main__":
                    nmsg = s.recv(MAX_ALLOWED_SIZE)
                    # print("NEW MESSAGE", nmsg)
                    content += nmsg
+               
+               end = datetime.now()
+               ellapsed = (end - start).total_seconds() * 1000
                # print("File content ====================================")
                # print("Fullmsg len: ", len(response))
                # print(len(content))
@@ -207,7 +211,7 @@ if __name__ == "__main__":
                    npath = os.path.join(os.getcwd(), download_folder)
                    os.makedirs(npath)
 
-               print("Saving to: ", file_path)
+               # print("Saving to: ", file_path)
                f = open(f"{file_path}", 'wb')
                f.write(content)
                f.close()

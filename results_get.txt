@@ -1,0 +1,58 @@
+========================== GET TESTS ====================================
+Grupo 1 Algoritmo 0:RANDOM
+File: FILE_428470 not found
+Median time for ADG1 = 0.56497s
+Server storage for RANDOM GROUP 1
+Server 9097, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9098, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9099, used storage: 0 Bytes, 0.0 Kilobytes
+Grupo 1 Algoritmo 1:Round Robin
+File: FILE_428470 not found
+Median time for RRDG1 = 0.6550400000000001s
+Server storage for Round Robin GROUP 1
+Server 9097, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9098, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9099, used storage: 0 Bytes, 0.0 Kilobytes
+Grupo 1 Algoritmo 2:HASH
+File: FILE_428470 not found
+Median time for HDG1 = 0.3841399999999999s
+Server storage for HASH GROUP 1
+Server 9097, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9098, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9099, used storage: 0 Bytes, 0.0 Kilobytes
+Grupo 2 Algoritmo 0:RANDOM
+Median time for ADG2 = 4.016559999999999s
+Server storage for RANDOM GROUP 2
+Server 9097, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9098, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9099, used storage: 0 Bytes, 0.0 Kilobytes
+Grupo 2 Algoritmo 1:Round Robin
+Median time for RRDG2 = 3.9656000000000007s
+Server storage for Round Robin GROUP 2
+Server 9097, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9098, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9099, used storage: 0 Bytes, 0.0 Kilobytes
+Grupo 2 Algoritmo 2:HASH
+Median time for HDG2 = 5.182120000000001s
+Server storage for HASH GROUP 2
+Server 9097, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9098, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9099, used storage: 0 Bytes, 0.0 Kilobytes
+Grupo 3 Algoritmo 0:RANDOM
+Median time for ADG3 = 20.329779999999992s
+Server storage for RANDOM GROUP 3
+Server 9097, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9098, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9099, used storage: 0 Bytes, 0.0 Kilobytes
+Grupo 3 Algoritmo 1:Round Robin
+Median time for RRDG3 = 13.09768s
+Server storage for Round Robin GROUP 3
+Server 9097, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9098, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9099, used storage: 0 Bytes, 0.0 Kilobytes
+Grupo 3 Algoritmo 2:HASH
+Median time for HDG3 = 12.205999999999996s
+Server storage for HASH GROUP 3
+Server 9097, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9098, used storage: 0 Bytes, 0.0 Kilobytes
+Server 9099, used storage: 0 Bytes, 0.0 Kilobytes
